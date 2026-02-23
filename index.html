@@ -861,11 +861,11 @@
     <div class="logo">610</div>
     <div class="header-right">
       <span class="user-greeting" id="greetingText"></span>
-      <button class="btn-logout" onclick="logout()">Sign Out</button>
     </div>
   </header>
 
-  <main class="app-main">
+  <!-- HOME TAB -->
+  <main class="app-main" id="tabHome">
     <div class="date-bar">
       <div class="date-label" id="dateLabel"></div>
       <div class="date-sub" id="dateGoalLabel"></div>
@@ -953,7 +953,79 @@
         <div>No meals logged today.<br>Tap <em>Log a Meal</em> to get started.</div>
       </div>
     </div>
+    <div style="height:80px"></div>
   </main>
+
+  <!-- PROFILE TAB -->
+  <main class="app-main" id="tabProfile" style="display:none;">
+    <div style="margin-bottom:2rem;">
+      <div class="section-label">Profile</div>
+      <div class="calorie-card" style="margin-bottom:1.25rem;">
+        <div style="display:flex;align-items:center;gap:1.25rem;">
+          <div style="width:56px;height:56px;border-radius:50%;background:var(--amber-dim);border:1px solid var(--amber);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--amber-light);" id="avatarInitial">?</div>
+          <div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;" id="profileName">—</div>
+            <div style="font-size:0.72rem;color:var(--muted);letter-spacing:0.05em;" id="profileUsername">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label">Settings</div>
+
+      <!-- Change Name -->
+      <div class="calorie-card" style="margin-bottom:1rem;">
+        <div style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem;">Display Name</div>
+        <div style="display:flex;gap:0.5rem;">
+          <input type="text" id="settingsName" placeholder="Your name"
+            style="flex:1;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.9rem;padding:0.65rem 0.9rem;outline:none;">
+          <button onclick="saveName()" style="background:var(--amber);border:none;color:#000;font-family:'DM Sans',sans-serif;font-size:0.72rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;padding:0 1rem;cursor:pointer;">Save</button>
+        </div>
+      </div>
+
+      <!-- Change Calorie Goal -->
+      <div class="calorie-card" style="margin-bottom:1rem;">
+        <div style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem;">Daily Calorie Goal</div>
+        <div style="display:flex;gap:0.5rem;">
+          <input type="number" id="settingsGoal" placeholder="e.g. 2600"
+            style="flex:1;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.9rem;padding:0.65rem 0.9rem;outline:none;">
+          <button onclick="saveGoal()" style="background:var(--amber);border:none;color:#000;font-family:'DM Sans',sans-serif;font-size:0.72rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;padding:0 1rem;cursor:pointer;">Save</button>
+        </div>
+      </div>
+
+      <!-- Change Password -->
+      <div class="calorie-card" style="margin-bottom:1rem;">
+        <div style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem;">Change Password</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;">
+          <input type="password" id="settingsNewPass" placeholder="New password"
+            style="background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.9rem;padding:0.65rem 0.9rem;outline:none;">
+          <input type="password" id="settingsConfPass" placeholder="Confirm password"
+            style="background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.9rem;padding:0.65rem 0.9rem;outline:none;">
+          <button onclick="savePassword()" style="background:none;border:1px solid var(--amber);color:var(--amber);font-family:'DM Sans',sans-serif;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.65rem;cursor:pointer;">Update Password</button>
+        </div>
+      </div>
+
+      <!-- Sign Out -->
+      <button onclick="logout()" style="width:100%;background:none;border:1px solid rgba(192,57,43,0.4);color:#EB5757;font-family:'DM Sans',sans-serif;font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.9rem;cursor:pointer;margin-bottom:0.75rem;transition:all 0.3s;"
+        onmouseover="this.style.background='rgba(192,57,43,0.1)'" onmouseout="this.style.background='none'">Sign Out</button>
+    </div>
+    <div style="height:80px"></div>
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav style="position:fixed;bottom:0;left:0;right:0;background:var(--dark);border-top:1px solid var(--border);display:flex;z-index:200;padding-bottom:env(safe-area-inset-bottom);">
+    <button id="navHome" onclick="switchAppTab('home')" style="flex:1;background:none;border:none;color:var(--amber);padding:0.9rem 0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:0.3rem;font-family:'DM Sans',sans-serif;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.2s;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
+      </svg>
+      Home
+    </button>
+    <button id="navProfile" onclick="switchAppTab('profile')" style="flex:1;background:none;border:none;color:var(--muted);padding:0.9rem 0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:0.3rem;font-family:'DM Sans',sans-serif;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.2s;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+      </svg>
+      Profile
+    </button>
+  </nav>
 </div>
 
 <!-- ═══════════════════════════════════
@@ -1434,6 +1506,74 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   showScreen('landing');
 });
+
+// ═══════════════════════════════════
+// APP TAB SWITCHING
+// ═══════════════════════════════════
+function switchAppTab(tab) {
+  document.getElementById('tabHome').style.display = tab === 'home' ? 'block' : 'none';
+  document.getElementById('tabProfile').style.display = tab === 'profile' ? 'block' : 'none';
+  document.getElementById('navHome').style.color = tab === 'home' ? 'var(--amber)' : 'var(--muted)';
+  document.getElementById('navProfile').style.color = tab === 'profile' ? 'var(--amber)' : 'var(--muted)';
+  if (tab === 'profile') renderProfile();
+}
+
+function renderProfile() {
+  const u = currentUser;
+  const name = u.name || u.username;
+  document.getElementById('profileName').textContent = name;
+  document.getElementById('profileUsername').textContent = '@' + u.username;
+  document.getElementById('avatarInitial').textContent = name.charAt(0).toUpperCase();
+  document.getElementById('settingsName').value = name;
+  document.getElementById('settingsGoal').value = u.goal || 2600;
+}
+
+function saveName() {
+  const name = document.getElementById('settingsName').value.trim();
+  if (!name) { showToast('Enter a name'); return; }
+  const users = DB.getUsers();
+  users[currentUser.username].name = name;
+  DB.saveUsers(users);
+  currentUser.name = name;
+  localStorage.setItem('610_session', JSON.stringify(currentUser));
+  renderProfile();
+  renderHeader();
+  showToast('Name updated');
+}
+
+function saveGoal() {
+  const goal = parseInt(document.getElementById('settingsGoal').value);
+  if (!goal || goal < 100) { showToast('Enter a valid calorie goal'); return; }
+  const users = DB.getUsers();
+  users[currentUser.username].goal = goal;
+  DB.saveUsers(users);
+  currentUser.goal = goal;
+  localStorage.setItem('610_session', JSON.stringify(currentUser));
+  renderDashboard();
+  showToast('Calorie goal updated to ' + goal.toLocaleString());
+}
+
+function savePassword() {
+  const np = document.getElementById('settingsNewPass').value;
+  const cp = document.getElementById('settingsConfPass').value;
+  if (!np) { showToast('Enter a new password'); return; }
+  if (np !== cp) { showToast('Passwords do not match'); return; }
+  if (np.length < 4) { showToast('Password too short'); return; }
+  const users = DB.getUsers();
+  users[currentUser.username].pwHash = simpleHash(np);
+  DB.saveUsers(users);
+  document.getElementById('settingsNewPass').value = '';
+  document.getElementById('settingsConfPass').value = '';
+  showToast('Password updated');
+}
+
+// Block double-tap zoom on iOS
+let lastTap = 0;
+document.addEventListener('touchend', function(e) {
+  const now = Date.now();
+  if (now - lastTap < 300) e.preventDefault();
+  lastTap = now;
+}, { passive: false });
 
 // Block pinch zoom on iOS Safari
 document.addEventListener('gesturestart', e => e.preventDefault());
