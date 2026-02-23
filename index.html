@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0a0a0a">
 <meta name="description" content="Calorie & Macro Tracker">
 <link rel="manifest" href="manifest.json">
-<title>Lumina — Calorie Tracker</title>
+<title>610 — Calorie Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -804,7 +804,7 @@
 ═══════════════════════════════════ -->
 <div class="screen active" id="landing">
   <div class="glow"></div>
-  <div class="brand-line">Lumina Nutrition</div>
+  <div class="brand-line">610 Nutrition</div>
   <div class="deco-line"></div>
   <h1 class="hero-title">Calorie<br><em>Tracker</em></h1>
   <p class="hero-sub">Effortless awareness.<br>Track every meal with precision.</p>
@@ -858,7 +858,7 @@
 ═══════════════════════════════════ -->
 <div class="screen" id="app" style="flex-direction:column;">
   <header class="app-header">
-    <div class="logo">Lumina</div>
+    <div class="logo">610</div>
     <div class="header-right">
       <span class="user-greeting" id="greetingText"></span>
       <button class="btn-logout" onclick="logout()">Sign Out</button>
@@ -964,12 +964,24 @@
     <h3 class="modal-title">Capture Your Meal</h3>
     <p class="modal-sub">Take a photo and our AI will analyse the calories & macros</p>
 
-    <input type="file" id="fileInput" accept="image/*" capture="environment" onchange="handlePhoto(event)">
+    <input type="file" id="fileInput" accept="image/*" onchange="handlePhoto(event)">
+    <input type="file" id="cameraInput" accept="image/*" capture="environment" onchange="handlePhoto(event)">
 
-    <div class="photo-zone" onclick="document.getElementById('fileInput').click()" id="photoZone">
+    <!-- API Key field -->
+    <div class="field" style="margin-bottom:1rem;" id="apiKeyField">
+      <label>Anthropic API Key</label>
+      <input type="password" id="inputApiKey" placeholder="sk-ant-..." style="font-size:0.78rem;">
+      <div style="font-size:0.65rem;color:var(--muted);margin-top:0.35rem;letter-spacing:0.04em;">Stored locally on your device only. Get yours at console.anthropic.com</div>
+    </div>
+
+    <div class="photo-zone" id="photoZone">
       <div class="photo-zone-text">
         <div class="photo-zone-icon">📷</div>
-        <div class="photo-zone-label">Tap to take photo or upload</div>
+        <div class="photo-zone-label" style="margin-bottom:1rem;">Choose how to add your meal</div>
+        <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+          <button onclick="document.getElementById('cameraInput').click()" style="background:var(--amber);border:none;color:#000;font-family:'DM Sans',sans-serif;font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:0.6rem 1.2rem;cursor:pointer;">📸 Camera</button>
+          <button onclick="document.getElementById('fileInput').click()" style="background:none;border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.6rem 1.2rem;cursor:pointer;">🖼 Upload</button>
+        </div>
       </div>
     </div>
 
@@ -1273,14 +1285,22 @@ function escHtml(s) {
 function openModal() {
   pendingMeal = null;
   document.getElementById('fileInput').value = '';
+  document.getElementById('cameraInput').value = '';
   document.getElementById('photoZone').innerHTML = `
     <div class="photo-zone-text">
       <div class="photo-zone-icon">📷</div>
-      <div class="photo-zone-label">Tap to take photo or upload</div>
+      <div class="photo-zone-label" style="margin-bottom:1rem;">Choose how to add your meal</div>
+      <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+        <button onclick="document.getElementById('cameraInput').click()" style="background:var(--amber);border:none;color:#000;font-family:'DM Sans',sans-serif;font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:0.6rem 1.2rem;cursor:pointer;">📸 Camera</button>
+        <button onclick="document.getElementById('fileInput').click()" style="background:none;border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.6rem 1.2rem;cursor:pointer;">🖼 Upload</button>
+      </div>
     </div>`;
   document.getElementById('analysisResult').classList.remove('show');
   document.getElementById('analyzingState').classList.remove('show');
   document.getElementById('btnSave').classList.remove('show');
+  // Load saved API key
+  const savedKey = localStorage.getItem('610_api_key') || '';
+  document.getElementById('inputApiKey').value = savedKey;
   document.getElementById('modalOverlay').classList.add('open');
 }
 
@@ -1312,7 +1332,10 @@ async function handlePhoto(evt) {
     showResult(result);
   } catch(err) {
     document.getElementById('analyzingState').classList.remove('show');
-    showToast('Analysis failed – please try again');
+    const msg = err.message.includes('No API key') 
+      ? 'Please enter your Anthropic API key above' 
+      : 'Analysis failed: ' + err.message;
+    showToast(msg);
     console.error(err);
   }
 }
@@ -1327,11 +1350,21 @@ function toBase64(file) {
 }
 
 async function analyzeWithClaude(base64, mediaType) {
+  const apiKey = document.getElementById('inputApiKey').value.trim();
+  if (!apiKey) throw new Error('No API key');
+  // Save key locally for convenience
+  localStorage.setItem('610_api_key', apiKey);
+
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-opus-4-6',
       max_tokens: 512,
       messages: [{
         role: 'user',
@@ -1351,7 +1384,10 @@ All numbers are integers. calories is total kcal. protein, carbs, fat are in gra
     })
   });
 
-  if (!response.ok) throw new Error('API error ' + response.status);
+  if (!response.ok) {
+    const err = await response.json().catch(()=>({}));
+    throw new Error(err.error?.message || 'API error ' + response.status);
+  }
   const data = await response.json();
   const text = data.content.map(c => c.text || '').join('');
   return JSON.parse(text.replace(/```json|```/g,'').trim());
