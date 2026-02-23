@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0a0a0a">
 <meta name="description" content="Calorie & Macro Tracker">
 <link rel="manifest" href="manifest.json">
@@ -967,11 +967,9 @@
     <input type="file" id="fileInput" accept="image/*" onchange="handlePhoto(event)">
     <input type="file" id="cameraInput" accept="image/*" capture="environment" onchange="handlePhoto(event)">
 
-    <!-- API Key field -->
-    <div class="field" style="margin-bottom:1rem;" id="apiKeyField">
-      <label>Anthropic API Key</label>
-      <input type="password" id="inputApiKey" placeholder="sk-ant-api03-ARv...hgAA" style="font-size:0.78rem;">
-      <div style="font-size:0.65rem;color:var(--muted);margin-top:0.35rem;letter-spacing:0.04em;">Stored locally on your device only. Get yours at console.anthropic.com</div>
+    <!-- API Key field hidden - key is hardcoded -->
+    <div id="apiKeyField" style="display:none;">
+      <input type="password" id="inputApiKey" value="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">
     </div>
 
     <div class="photo-zone" id="photoZone">
