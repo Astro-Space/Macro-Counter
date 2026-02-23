@@ -1,4 +1,4 @@
-const CACHE = 'lumina-v1';
+const CACHE = '610-v3';
 const ASSETS = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
