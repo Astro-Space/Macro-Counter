@@ -1,0 +1,22 @@
+{
+  "name": "Lumina Calorie Tracker",
+  "short_name": "Lumina",
+  "description": "AI-powered calorie and macro tracker",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#0a0a0a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192x192/C9943A/000000?text=L",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512x512/C9943A/000000?text=L",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
